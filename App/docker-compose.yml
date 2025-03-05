@@ -1,26 +1,34 @@
 version: '3.8'
 
 services:
-  jenkins:
-    build:
-      context: .
-      dockerfile: Dockerfile-jenkins
-    ports:
-      - "8080:8080"
-      - "50000:50000"
-    volumes:
-      - jenkins_home:/var/jenkins_home
-    restart: always
-
   flask:
     build:
       context: .
       dockerfile: Dockerfile-flask
+    container_name: flasksbackup-server
+    networks:
+      - jenkinsbackup-net
     ports:
-      - "5000:5000"
-    depends_on:
-      - jenkins
+      - "5001:5001"
     restart: always
 
+  jenkins:
+    build:
+      context: .
+      dockerfile: Dockerfile-jenkins
+    container_name: jenkinsbackup-server
+    networks:
+      - jenkinsbackup-net
+    ports:
+      - "8081:8081"
+      - "50001:50001"
+    volumes:
+      - jenkinsbackup-vol:/var/jenkins_home
+    restart: always
+
+networks:
+  jenkinsbackup-net:
+    driver: bridge
+
 volumes:
-  jenkins_home:
+  jenkinsbackup-vol:
