@@ -37,7 +37,3 @@ services:
 networks:
   jenkinsbackup-net:
     driver: bridge
-
-volumes:
-  jenkinsbackup-vol:
-    driver: local
