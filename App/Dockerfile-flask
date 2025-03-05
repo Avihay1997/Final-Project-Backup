@@ -1,12 +1,20 @@
-FROM python:3.11.11 AS flask
+# Stage 1: Build Stage
+FROM python:3.11.11 AS flask-build
 
 WORKDIR /App
 
-COPY requirements.txt /App/requirements.txt
-RUN /App/venv/bin/pip install --no-cache-dir -r /App/requirements.txt
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . /App  
+COPY . .
 
-EXPOSE 5001  
+# Stage 2: Runtime Stage
+FROM python:3.11.11 AS flask-runtime
+
+WORKDIR /App
+
+COPY --from=flask-build /App /App
+
+EXPOSE 5001
 
 ENTRYPOINT ["python", "app.py"]
