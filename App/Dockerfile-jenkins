@@ -1,4 +1,5 @@
-FROM jenkins/jenkins:lts-jdk17
+# Stage 1: Build Stage
+FROM jenkins/jenkins:lts-jdk17 AS jenkins-build
 
 USER root
 
@@ -11,10 +12,14 @@ RUN apt-get update && apt-get install -y \
 
 RUN usermod -aG docker jenkins  
 
-VOLUME ["/var/jenkins_home"]
+# Stage 2: Runtime Stage
+FROM jenkins/jenkins:lts-jdk17 AS jenkins-runtime
+
+USER jenkins
+
+COPY --from=jenkins-build /usr/share/jenkins /usr/share/jenkins
+COPY --from=jenkins-build /usr/bin /usr/bin
 
 EXPOSE 8081 50001
-
-USER jenkins  
 
 ENTRYPOINT ["/usr/bin/java", "-jar", "/usr/share/jenkins/jenkins.war"]
