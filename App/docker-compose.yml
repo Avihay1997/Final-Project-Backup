@@ -1,11 +1,12 @@
 version: '3.8'
+
 services:
   jenkins:
     build:
       context: .
       dockerfile: Dockerfile-jenkins
-      container_name: jenkinsbackup-server
-      networks:
+    container_name: jenkinsbackup-server
+    networks:
       - jenkinsbackup-net    
     ports:
       - "8081:8081"
@@ -17,10 +18,7 @@ services:
       - JAVA_OPTS="-Xmx2g -Xms512m"
     group_add:
       - 988
-volumes:
-  jenkins_home:
 
-services:
   flask:
     build:
       context: .
@@ -33,6 +31,8 @@ services:
     environment:
       - FLASK_ENV=development
     restart: always
+    depends_on:
+      - jenkins
 
 networks:
   jenkinsbackup-net:
