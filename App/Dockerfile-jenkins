@@ -13,7 +13,7 @@ RUN usermod -aG docker jenkins
 
 VOLUME ["/var/jenkins_home"]
 
-EXPOSE 8080 50000
+EXPOSE 8081 50001
 
 USER jenkins  
 
