@@ -32,6 +32,3 @@ networks:
 
 volumes:
   jenkinsbackup-vol:
-
-group_add:
-  - 988
